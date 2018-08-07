@@ -37,7 +37,7 @@ class IntSet
   end
 
   def insert(num)
-    self[num].push(num)
+    self[num].push(num) unless include?(num)
   end
 
   def remove(num)
@@ -76,9 +76,13 @@ class ResizingIntSet
   end
 
   def remove(num)
-    @count -= 1
-    self[num].delete(num)
-    num
+    if include?(num)
+      @count -= 1
+      self[num].delete(num)
+      num
+    else
+      nil
+    end
   end
 
   def include?(num)
