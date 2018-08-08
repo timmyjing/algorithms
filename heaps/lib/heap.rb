@@ -2,9 +2,12 @@ class BinaryMinHeap
   attr_reader :store, :prc
 
   def initialize(&prc)
+    @prc = prc || Proc.new {|a,b| a <=> b}
+    @store = []
   end
 
   def count
+    @store.length
   end
 
   def extract
@@ -18,15 +21,38 @@ class BinaryMinHeap
 
   public
   def self.child_indices(len, parent_index)
+    [parent_index * 2 + 1, parent_index * 2 + 2].select {|el| el < len}
   end
 
   def self.parent_index(child_index)
+    raise "root has no parent" if child_index == 0
+    (child_index - 1) / 2
   end
 
   def self.heapify_down(array, parent_idx, len = array.length, &prc)
+    prc ||= Proc.new {|a,b| a <=> b}
+    child = child_indices(len, parent_idx)
+    if child.any? {|idx| prc.call(array[parent_idx], array[idx]) == 1}
+      if child.length == 1 || prc.call(array[child[0]], array[child[1]]) == -1 
+        larger = child[0]
+      else
+        larger = child[1]
+      end
+      array[parent_idx], array[larger] = array[larger], array[parent_idx]
+      heapify_down(array, larger)
+    end
+    array
   end
 
   def self.heapify_up(array, child_idx, len = array.length, &prc)
+    return array if child_idx == 0
+    prc ||= Proc.new {|a,b| a <=> b}
+    parent_idx = parent_index(child_idx)
+    if prc.call(array[parent_idx], array[child_idx]) == 1
+      array[child_idx], array[parent_idx] = array[parent_idx], array[child_idx]
+      heapify_up(array, parent_idx)
+    end
+    array
   end
 
 end
