@@ -42,6 +42,7 @@ class BinarySearchTree
     node = find(value)
     @root = nil if node == root
 
+
   end
 
   # helper method for #delete:
