@@ -40,8 +40,8 @@ class BinarySearchTree
 
   def delete(value)
     node = find(value)
+    return if node == nil
     @root = nil if node == root
-
 
   end
 
