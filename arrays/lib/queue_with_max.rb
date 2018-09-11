@@ -57,6 +57,4 @@ end
 # to the new max, else add new element in (because when max el ahead is dequeued, max will be the current el)
 
 # enq [10,9,8,7,6,5,10]
-# [10,10]
-# max [5,5,10,10,10]
-# max should be [10,10,10,2,1]
+# max [10,10]

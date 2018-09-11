@@ -41,17 +41,39 @@ class BinarySearchTree
   def delete(value)
     node = find(value)
     return if node == nil
-    @root = nil if node == root
+    parent = find_parent(node)
+
+    if node.left.nil? && node.right.nil?
+      parent.left = nil if parent.left == node
+      parent.right = nil if parent.right == node
+      return
+    end
+    
+    if node.right.nil? || node.left.nil?
+      if node.left
+        parent.left = node.left if parent.left == node
+        parent.right = node.left if parent.right == node
+      else
+        parent.left = node.right if parent.left == node
+        parent.right = node.right if parent.right == node
+      end
+      return
+    end
+
 
   end
 
   # helper method for #delete:
   def maximum(tree_node = @root)
-    return tree_node if tree_node.right.nil?
+    return tree_node if !tree_node || tree_node.right.nil?
     maximum(tree_node.right)
   end
 
   def depth(tree_node = @root)
+    return 0 if tree_node.nil?
+    left = 1 + depth(tree_node.left)
+    right = 1 + depth(tree_node.right)
+    return [left, right].max - 1
   end 
 
   def is_balanced?(tree_node = @root)
@@ -63,5 +85,15 @@ class BinarySearchTree
 
   private
   # optional helper methods go here:
+
+  def find_parent(node, tree_node = @root)
+    return nil if root == node
+    return tree_node if tree_node.left == node || tree_node.right == node
+    if node.value > tree_node.value
+      find_parent(node, tree_node.right)
+    else
+      find_parent(node, tree_node.left)
+    end
+  end
 
 end
