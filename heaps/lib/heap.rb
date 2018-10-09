@@ -7,16 +7,25 @@ class BinaryMinHeap
   end
 
   def count
-    @store.length
+    store.length
   end
 
   def extract
+    return nil if count == 0
+    return store.pop if count == 1
+    @store[0], @store[-1] = store.last, store.first
+    el = store.pop
+    @store = BinaryMinHeap.heapify_down(store, 0, count, &prc)
+    el
   end
 
   def peek
+    store.first
   end
 
   def push(val)
+    store.push(val)
+    @store = BinaryMinHeap.heapify_up(store, store.length - 1, count, &prc)
   end
 
   public
