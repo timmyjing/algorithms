@@ -5,6 +5,7 @@ class DynamicProgramming
   def initialize
     @blair_cache = {1 => 1, 2 => 2}
     @frog_cache = {0 => [[]], 1 => [[1]]}
+    @maze_cache = []
   end
 
   def blair_nums(n)
@@ -89,6 +90,30 @@ class DynamicProgramming
   end
 
   def maze_solver(maze, start_pos, end_pos)
+    return @maze_cache if solve_maze(maze, start_pos, end_pos)
+  end
+
+  def solve_maze(maze, start_pos, finish_pos)
+
+    if start_pos[0] >= 0 && start_pos[0] < maze.length && start_pos[1] >= 0 && start_pos[1] < maze[0].length && maze[start_pos[0]][start_pos[1]] != "X"
+      @maze_cache.push([start_pos[0], start_pos[1]])
+      return true if maze[start_pos[0]][start_pos[1]] == 'F'
+
+      maze[start_pos[0]][start_pos[1]] = 'X'
+      p @maze_cache
+      return true if solve_maze(maze, [start_pos[0] + 1, start_pos[1]], finish_pos)
+      return true if solve_maze(maze, [start_pos[0] - 1, start_pos[1]], finish_pos)
+      return true if solve_maze(maze, [start_pos[0], start_pos[1] + 1], finish_pos)
+      return true if solve_maze(maze, [start_pos[0], start_pos[1] - 1], finish_pos)
+
+
+      # backtrack if unsuccessful
+
+      @maze_cache.pop
+      maze[start_pos[0]][start_pos[1]] = ' '
+    end
+
+    return false
   end
 end
   
